@@ -14,19 +14,25 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # use Node 16 (more stable with CRA 17 projects)
+      # CRA in this repo works better with Node 16
       - name: Use Node.js 16
         uses: actions/setup-node@v4
         with:
           node-version: 16
 
-      # install even if peer deps don't match (React 17 vs testing lib 18)
+      # 1) install project deps, ignoring peer fights
       - name: Install deps
         run: npm install --legacy-peer-deps
 
+      # 2) force old ajv + old ajv-keywords that CRA expects
+      - name: Pin ajv versions
+        run: npm install ajv@^6 ajv-keywords@^3 --legacy-peer-deps
+
+      # 3) now build
       - name: Build
         run: npm run build
 
+      # 4) deploy to gh-pages
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
         with:
