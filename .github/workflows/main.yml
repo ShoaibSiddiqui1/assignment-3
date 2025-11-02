@@ -14,13 +14,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Use Node
+      # use an older Node that matches CRA better
+      - name: Use Node.js 16
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 16
 
-      - name: Install
-        run: npm install --legacy-peer-deps
+      # install exactly what's in package-lock.json
+      - name: Install deps
+        run: npm ci
 
       - name: Build
         run: npm run build
